@@ -20,9 +20,17 @@ var app = builder.Build();
 // Seed my data to the DB
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    SeedData.Initialize(services);
+    var roles = new[] { "Admin", "Vip" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
 }
 
 // Configure the HTTP request pipeline.
@@ -45,5 +53,13 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+// Seed my data to the DB
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedData.Initialize(services);
+}
 
 app.Run();
