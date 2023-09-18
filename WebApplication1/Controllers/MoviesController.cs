@@ -121,6 +121,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Movies/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Movie == null)
@@ -139,6 +140,7 @@ namespace WebApplication1.Controllers
         }
 
         // POST: Movies/Delete/5
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
